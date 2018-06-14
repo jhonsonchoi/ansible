@@ -1,0 +1,32 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+# - hosts: prod_masters
+#   remote_user: root
+#   vars:
+#     - es_master: 1
+#     - es_user: elasticsearch
+#     - es_group: elasticsearch
+#     - es_heap_size: 4g
+#   roles:
+#     - masters_on_system
+
+- hosts: elasticsearch
+  remote_user: root
+  vars:
+    - es_home: /usr/share/elasticsearch
+    - es_plugins:
+      - {name: elasticsearch-analysis-mecab-ko, file: elasticsearch-analysis-mecab-ko-6.2.2.zip}
+      - {name: analysis-dynamic-synonym, file: elasticsearch-analysis-dynamic-synonym-6.2.2.zip}
+      - {name: hangul-jamo-analyzer, file: elasticsearch-analysis-hangul-jamo-6.2.2.zip}
+      - {name: oreum-plus-analysis, file: oreum-plus-elasticsearch-plugin-1.0.0-6.2.2.zip}
+      - {name: seunjeon, file: elasticsearch-analysis-seunjeon-6.1.1.0.zip}
+#      - {name: summerce-rest, file: elasticsearch-summerce-rest-6.2.2.zip}
+
+  roles:
+    - elasticsearch_plugins
+

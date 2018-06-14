@@ -1,0 +1,15 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+- hosts: logstash
+  remote_user: root
+  vars:
+    - ls_state: stopped
+
+  roles:
+    - ls_service_manager
+

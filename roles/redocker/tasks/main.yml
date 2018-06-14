@@ -1,0 +1,6 @@
+- name: make sure docker is running on centos or redhat 6
+  service:
+    name: docker
+    enabled: yes
+    state: restarted
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")

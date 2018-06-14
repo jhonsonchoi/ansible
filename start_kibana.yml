@@ -1,0 +1,15 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+- hosts: kibana
+  remote_user: root
+  vars:
+    - kibana_state: started
+
+  roles:
+    - kibana_service_manager
+

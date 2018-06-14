@@ -1,0 +1,15 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+- hosts: elasticsearch
+  remote_user: root
+  vars:
+    - es_state: stopped
+
+  roles:
+    - es_service_manager
+

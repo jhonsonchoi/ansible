@@ -1,0 +1,15 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+- hosts: master
+  remote_user: root
+  vars:
+    - es_state: started
+
+  roles:
+    - es_service_manager
+

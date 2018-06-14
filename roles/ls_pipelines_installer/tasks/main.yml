@@ -1,0 +1,35 @@
+
+
+#- name: Checkout subversion repository to specified folder
+#  subversion: 
+#    username: choijongsung 
+#    password: choijongsung 
+#    repo: svn://100.100.100.167/es/logstash/trunk
+#    dest: /home/elastic/enuri2/logstash
+
+
+- name: install pipeline
+  copy:
+    src: "{{ item }}"
+    dest: "/home/elastic/{{ item }}"
+#    mode: 0644
+  with_items:
+    - as-is_pipeline.conf
+    - rubyfilter.rb
+
+- name: install pipeline shell 
+  copy:
+    src: "{{ item }}"
+    dest: "/home/elastic/{{ item }}"
+    mode: 0775
+  with_items:
+    - as-is.sh
+    - index-as-is-full.sh
+    - index-as-is-delta.sh
+    - index-ac-full.sh
+
+- name: copy as-is-goods.sql
+  template: src=as-is-goods.sql.j2 dest=/home/elastic/as-is-goods.sql 
+
+- name: copy as-is-pricelist.sql
+  template: src=as-is-pricelist.sql.j2 dest=/home/elastic/as-is-pricelist.sql 

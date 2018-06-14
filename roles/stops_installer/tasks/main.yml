@@ -1,0 +1,30 @@
+
+- name: make stops folder
+  file:
+    path: "/etc/elasticsearch/{{ dic_dir }}"
+    state: directory
+  when: dic_dir is defined
+
+- name: install stops
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/elasticsearch/{{ dic_dir }}/{{ item }}"
+    #mode: 0755
+  with_items:
+    - enuri_stopwords.txt
+    - enuri_unitwords.txt
+    - enuri_compounds.txt
+    - enuri_specialwords.txt
+  when: dic_dir is defined
+
+- name: install stops
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/elasticsearch/{{ item }}"
+    #mode: 0755
+  with_items:
+    - enuri_stopwords.txt
+    - enuri_unitwords.txt
+    - enuri_compounds.txt
+    - enuri_specialwords.txt
+  when: dic_dir is undefined

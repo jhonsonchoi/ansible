@@ -1,0 +1,9 @@
+---
+
+- hosts: kibana
+  remote_user: root
+  vars:
+    - nginx_state: started
+
+  roles:
+    - hq_installer

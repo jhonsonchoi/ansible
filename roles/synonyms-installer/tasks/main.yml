@@ -1,0 +1,8 @@
+- name: install synonyms
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/elasticsearch/{{ item }}"
+    #mode: 0755
+  with_items:
+    - enuri_synonyms.txt
+    - enuri_hanja-synonyms.txt

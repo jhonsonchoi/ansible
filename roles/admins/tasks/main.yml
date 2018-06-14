@@ -1,0 +1,10 @@
+- name: make sure nexus3 is running
+  docker_container:
+    name: nexus3
+    image: sonatype/nexus3:3.8.0
+    state: started
+#    restart: yes
+#    volumes:
+#      - /root/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "8081:8081"

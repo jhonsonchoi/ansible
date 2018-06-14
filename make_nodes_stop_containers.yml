@@ -1,0 +1,45 @@
+---
+
+#
+
+
+- hosts: prod_data
+  remote_user: elastic
+  tasks:
+
+    - name: make sure elasticsearch is removed
+      docker_container:
+        name: elasticsearch
+        state: absent
+
+- hosts: prod_data
+  remote_user: root
+  tasks:
+
+    - name: make sure docker is running on centos or redhat 6
+      service:
+        name: docker
+        # enabled: yes
+        state: stopped
+      when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+
+- hosts: prod_masters
+  remote_user: elastic
+  tasks:
+
+    - name: make sure elasticsearch is removed
+      docker_container:
+        name: elasticsearch
+        state: absent
+
+- hosts: prod_masters
+  remote_user: root
+  tasks:
+
+    - name: make sure docker is running on centos or redhat 6
+      service:
+        name: docker
+        # enabled: yes
+        state: stopped
+      when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")

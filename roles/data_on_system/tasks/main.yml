@@ -1,0 +1,44 @@
+
+- name: copy elasticsearch.yml
+  template: src=elasticsearch.yml.j2 dest=/home/elastic/elasticsearch.yml
+
+
+
+- name: make sure elasticsearch is running
+  docker_container:
+    name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.1
+#    state: started
+    restart: yes
+    ulimits:
+      - nofile:65536:65536
+      - nproc:65536:65536
+    volumes:
+      - /home/elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+#      - /root/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    etc_hosts: >
+      {
+        "ELSMSTND01": "100.100.100.111",
+        "ELSMSTND02": "100.100.100.112",
+        "ELSMSTND03": "100.100.100.113",
+        "ELSESND01": "100.100.100.114",
+        "ELSESND02": "100.100.100.115",
+        "ELSESND03": "100.100.100.116",
+        "ELSESND04": "100.100.100.117",
+        "ELSESND05": "100.100.100.118",
+        "ELSESND06": "100.100.100.119",
+        "ELSESND07": "100.100.100.120",
+        "ELSESND08": "100.100.100.141",
+        "ELSESND09": "100.100.100.142",
+        "ELSESND10": "100.100.100.143",
+        "ELSESND11": "100.100.100.144",
+        "ELSESND12": "100.100.100.145",
+        "ELSESND13": "100.100.100.146",
+        "ELSESND14": "100.100.100.147"
+      }
+    # network_mode: host
+  # become: yes
+  # become_method: sudo

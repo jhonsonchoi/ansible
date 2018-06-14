@@ -1,0 +1,15 @@
+
+# add user
+
+- name: add user "elastic"
+  user:
+    name: elastic
+    append: yes
+#    groups: docker
+
+- name: add authorized key for a user "elastic"
+  authorized_key:
+    user: elastic
+    key: "{{ lookup('file', '/home/jchoi/.ssh/id_rsa.pub') }}"
+#    key: https://github.com/charlie.keys
+

@@ -1,0 +1,61 @@
+
+#- name: set vm.max_map_count in sysctl.conf
+#  sysctl:
+#    name: vm.max_map_count
+#    value: 262144
+
+# disable swapping
+- name: set vm.swappiness in sysctl.conf
+  sysctl:
+    name: vm.swappiness
+    value: 1
+
+- name: Install Java
+    # become: yes
+  yum: name=java-1.8.0-openjdk state=present update_cache=yes
+
+
+- name: add Elasticsearch repo
+  # become: yes
+  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch.repo
+  # when: es_use_repository
+
+  # - name: include versionlock
+  #   include: elasticsearch-RedHat-version-lock.yml
+  #   when: es_version_lock
+
+- name: Install Elasticsearch
+    # become: yes
+  yum: name=elasticsearch state=present update_cache=yes
+    # when: es_use_repository
+    # register: redhat_elasticsearch_install_from_repo
+  notify: restart elasticsearch
+    # until: '"failed" not in redhat_elasticsearch_install_from_repo'
+    # retries: 5
+    # delay: 10
+
+
+- name: Create Data Directories
+  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
+  with_items:
+    - "{{ es_data_dirs }}"
+  when: es_data_dirs is defined
+
+- name: copy elasticsearch.yml
+  template: src=elasticsearch.yml.j2 dest={{es_conf_dir}}/elasticsearch.yml owner=root group={{ es_group }} mode=0660
+  notify: restart elasticsearch
+
+#- name: Copy log4j2.properties File for Instance
+#  become: yes
+#  template: src={{es_config_log4j2}} dest={{es_conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+#  notify: restart elasticsearch
+
+- name: Copy jvm.options File for Instance
+#  become: yes
+  template: src=jvm.options.j2 dest={{es_conf_dir}}/jvm.options owner=root group={{ es_group }} mode=0660
+  notify: restart elasticsearch
+
+#- name: Copy elasticsearch sysconfig
+#  become: yes
+#  template: src=elasticsearch.j2 dest=/etc/sysconfig/elasticsearch owner=root group={{ es_group }} mode=0660
+#  notify: restart elasticsearch

@@ -1,0 +1,120 @@
+- name: remove bin
+  file:
+    path: "/usr/local/bin/{{ item }}"
+    state: absent
+  with_items:
+    - mecab
+    - mecab-config
+
+- name: install bin
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - mecab
+    - mecab-config
+
+- name: remove lib
+  file:
+    path: "/usr/local/lib/{{ item }}"
+    state: absent
+  with_items:
+    - libmecab.so.2.0.0
+    - libmecab.a
+    - libmecab.la
+    - libmecab.so.2
+    - libmecab.so
+    - libMeCab.so
+
+- name: install lib64
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/lib64/{{ item }}"
+  with_items:
+    - libmecab.so.2.0.0
+    - libmecab.a
+    - libmecab.la
+    - libMeCab.so
+
+- name: link libmecab.so.2
+  file:
+    path: /usr/lib64/libmecab.so.2
+    state: link
+    src: /usr/lib64/libmecab.so.2.0.0
+
+- name: link libmecab.so
+  file:
+    path: /usr/lib64/libmecab.so
+    state: link
+    src: /usr/lib64/libmecab.so.2.0.0
+
+- name: remove libexec
+  file:
+    path: "/usr/local/libexec/{{ item }}"
+    state: absent
+  with_items:
+    - mecab
+    # - mecab-dict-index
+    # - mecab-dict-gen
+    # - mecab-cost-train
+    # - mecab-system-eval
+    # - mecab-test-gen
+
+- name: make /usr/libexec/mecab
+  file:
+    path: /usr/libexec/mecab
+    state: directory
+
+- name: install libexec
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/libexec/mecab/{{ item }}"
+    mode: 0755
+  with_items:
+    - mecab-dict-index
+    - mecab-dict-gen
+    - mecab-cost-train
+    - mecab-system-eval
+    - mecab-test-gen
+
+- name: remove man
+  file:
+    path: "/usr/local/share/man/man1/{{ item }}"
+    state: absent
+  with_items:
+    - mecab.1
+
+- name: install man
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/man/man1/{{ item }}"
+  with_items:
+    - mecab.1
+
+- name: remove mecab conf
+  file:
+    path: "/usr/local/etc/{{ item }}"
+    state: absent
+  with_items:
+    - mecabrc
+
+- name: make /etc/mecab
+  file:
+    path: /etc/mecab
+    state: directory
+
+- name: install etc
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/mecab/{{ item }}"
+    mode: 0644
+  with_items:
+    - mecabrc
+
+- name: remove mecab dic
+  file:
+    path: "/usr/local/lib/{{ item }}"
+    state: absent
+  with_items:
+    - mecab

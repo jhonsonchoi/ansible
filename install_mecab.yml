@@ -1,0 +1,14 @@
+---
+
+- hosts: elasticsearch
+  remote_user: root
+  roles:
+    - mecab
+
+#- hosts: data
+#  remote_user: root
+#  vars:
+#    - es_state: restarted
+#
+#  roles:
+#    - es_service_manager

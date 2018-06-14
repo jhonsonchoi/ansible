@@ -1,0 +1,31 @@
+
+#  /usr/share/elasticsearch-hq/ElasticHQ-elasticsearch-HQ-b3a1421/
+- name: unzip elasticsearch-hq
+  unarchive:
+    src: ElasticHQ-elasticsearch-HQ-v2.0.3-23-gb3a1421.zip
+    dest: /usr/share/elasticsearch-hq
+
+- name: add nginx repo
+  copy:
+    src: nginx.repo
+    dest: /etc/yum.repos.d/nginx.repo
+
+- name: Install nginx
+  yum: name=nginx state=present update_cache=yes
+
+- name: copy default.conf.j2
+  template: src=default.conf.j2 dest=/etc/nginx/conf.d/default.conf
+
+- name: manage nginx service
+  # become: yes
+  service: name=nginx state={{ nginx_state }} enabled=yes
+
+#- name: make sure elasticsearch-hq is running
+#  docker_container:
+#    name: hq
+#    image: hq:0.1
+#    image: elasticsearch-hq:1.0
+#    state: started
+#    restart: yes
+#    ports:
+#      - "80:80"

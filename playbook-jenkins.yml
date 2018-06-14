@@ -1,0 +1,63 @@
+- hosts: all
+
+  tasks:
+
+    # - name: add repository
+    #   yum_repository:
+    #     name: Docker CE Stable - $basearch
+    #     baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    #     enabled: yes
+    #     gpgcheck: yes
+    #     gpgkey: https://download.docker.com/linux/centos/gpg
+
+    - name: add repository
+      shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    # - name: upgrade all packages
+    #   yum:
+    #     name: '*'
+    #     state: latest
+
+    - name: install docker-ce
+      yum:
+        name: docker-ce
+        state: present
+
+    # - name: add logstash repository
+    #   yum_repository:
+    #     name: logstash
+    #     baseurl: https://artifacts.elastic.co/packages/6.x/yum
+    #     enabled: yes
+    #     gpgcheck: yes
+    #     gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    #     description: Elastic repository for 6.x packages
+
+    - name: make sure docker is running
+      systemd: state=started name=docker
+
+    - user:
+        name: jenkins
+        groups: wheel, docker
+        append: yes
+
+# optional
+
+    - name: install python-docker-py
+      yum:
+        name: python-docker-py
+        state: present
+
+    - name: restart a container
+      docker_container:
+        name: jenkins
+        image: jenkins/jenkins:lts
+        state: started
+        restart: yes
+        # user: 1001
+        volumes:
+          - jenkins_home:/var/jenkins_home
+        ports:
+          - "8080:8080"
+          - "50000:50000"

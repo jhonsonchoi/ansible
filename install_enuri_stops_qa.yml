@@ -1,0 +1,18 @@
+---
+
+- hosts: elasticsearch
+  remote_user: root
+  vars:
+    - dic_dir: qa
+
+  roles:
+    - stops_installer
+
+#- hosts: prod_data
+#  remote_user: root
+#  vars:
+#    - es_state: restarted
+
+#  roles:
+#    - es_service_manager
+

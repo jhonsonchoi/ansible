@@ -1,0 +1,14 @@
+
+- name: make synonyms folder
+  file:
+    path: "/etc/elasticsearch/{{ dic_dir }}"
+    state: directory
+
+- name: install synonyms
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/elasticsearch/{{ dic_dir }}/{{ item }}"
+    #mode: 0755
+  with_items:
+    - enuri_synonyms.txt
+    - enuri_hanja-synonyms.txt

@@ -1,0 +1,13 @@
+---
+
+
+- hosts: logstash
+  remote_user: root
+  vars:
+    - ls_user: logstash
+    - ls_group: logstash
+    - ls_heap_size: 16g
+    - pl_part: 0
+
+  roles:
+    - ls_installer

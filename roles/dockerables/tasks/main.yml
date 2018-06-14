@@ -1,0 +1,92 @@
+
+- name: install epel-release to centos 6
+  yum:
+    name: epel-release
+#    state: latest
+  when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "6")
+
+# - name: get epel-relase to redhat 6
+#   get_url:
+#     url: http://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+#     dest: /tmp/epel-release-latest-6.noarch.rpm
+#   when: (ansible_distribution == "RedHat" and ansible_distribution_major_version == "6")
+
+- name: install epel-relase to redhat 6
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+  when: (ansible_distribution == "RedHat" and ansible_distribution_major_version == "6")
+
+- name: install docker-io
+  yum:
+    name: docker-io
+#    state: latest
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+- name: install python-pip to centos or redhat 6
+  yum:
+    name: python-pip
+#    state: latest
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+- name: install python-pip to centos or redhat 6
+  pip:
+    name: docker-py
+#    state: latest
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+
+- name: add docker repository
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "7")
+
+- name: install docker-ce
+  yum:
+    name: docker-ce
+#    state: latest
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "7")
+
+
+
+# add user
+
+- name: add group "docker" on centos or redhat 6
+  group:
+    name: docker
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+- name: add user "elastic"
+  user:
+    name: elastic
+    append: yes
+    groups: docker
+
+- name: add authorized key for a user "elastic"
+  authorized_key:
+    user: elastic
+    key: "{{ lookup('file', '/home/jchoi/.ssh/id_rsa.pub') }}"
+#    key: https://github.com/charlie.keys
+
+
+# make sure docker is running
+
+- name: make sure docker is running on centos or redhat 6
+  service:
+    name: docker
+    enabled: yes
+    state: restarted
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "6")
+
+- name: make sure docker is running on centos or redhat 7
+  systemd:
+    name: docker
+    enabled: yes
+    state: restarted
+  when: ((ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and ansible_distribution_major_version == "7")
+
+
+- name: set vm.max_map_count in sysctl.conf
+  sysctl:
+    name: vm.max_map_count
+    value: 262144

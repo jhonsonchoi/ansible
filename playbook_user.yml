@@ -1,0 +1,20 @@
+- hosts: all
+
+  remote_user: root
+
+  tasks:
+
+    - name: debug
+      debug:
+
+    - name: hosts
+      template: src=hosts.j2 dest=/etc/hosts
+
+    - name: add group "elastic"
+      group: name=tomcat
+
+    - name: add user "elastic"
+      user: name=tomcat group=tomcat home=/usr/share/tomcat createhome=no
+      become: True
+      become_method: sudo
+

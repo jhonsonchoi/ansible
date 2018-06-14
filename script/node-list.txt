@@ -1,0 +1,8 @@
+espoc1:9200
+espoc2:9200
+espoc3:9200
+espoc4:9200
+espoc5:9200
+espoc6:9200
+espoc7:9200
+espoc8:9200

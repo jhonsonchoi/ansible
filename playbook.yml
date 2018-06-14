@@ -1,0 +1,67 @@
+- hosts: all
+
+  vars:
+    elastic_port: 9200
+
+  remote_user: root
+
+  tasks:
+
+    - name: debug
+      debug:
+
+    - name: hosts
+      template: src=hosts.j2 dest=/etc/hosts
+
+    - name: add group "elastic"
+      group: name=tomcat
+
+    - name: add user "elastic"
+      user: name=tomcat group=tomcat home=/usr/share/tomcat createhome=no
+      become: True
+      become_method: sudo
+
+    - name: download elasticsearch
+      copy: src=elasticsearch-5.6.2.tar.gz dest=/opt/elasticsearch-5.6.2.tar.gz
+
+    - name: extract elasticsearch
+      command: chdir=/usr/local /bin/tar zxf /opt/elasticsearch-5.6.2.tar.gz -C /opt/ creates=/opt/elasticsearch-5.6.2
+
+    - name: symlink install directory
+      file: src=/opt/elasticsearch-5.6.2 path=/usr/local/elasticsearch state=link
+
+    - name: change ownership of elasticsearch installation
+      file: path=/usr/local/elasticsearch/ owner=elastic group=elastic state=directory recurse=yes
+
+    - name: elastic config
+      template: src=elasticsearch.yml.j2 dest=/usr/local/elasticsearch-5.6.2/config/elasticsearch.yml
+      notify: restart elasticsearch
+
+    - name: elastic jvm config
+      copy: src=jvm.options dest=/usr/local/elasticsearch-5.6.2/config/jvm.options
+      notify: restart elasticsearch
+
+    - name: data
+      file: path=/data/es owner=elastic group=elastic
+
+    - name: logs
+      file: path=/logs/es owner=elastic group=elastic
+
+#    - name: install elasticsearch init script
+#      copy: src=elasticsearch.sh dest=/etc/init.d/elasticsearch mode=0755
+
+#    - name: start elasticsearch
+#      service: name=elasticsearch state=started enabled=yes
+
+    - name: telnet
+      yum: name=telnet state=present
+
+    - name: wait for elastic to start
+      wait_for: port={{elastic_port}}
+
+  handlers:
+
+    - name: restart elasticsearch
+      debug:
+
+# /usr/local/elasticsearch-5.6.2/bin/elasticsearch -d

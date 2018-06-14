@@ -1,0 +1,6 @@
+# Configure resolv.conf
+- name: Configure resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: 0644

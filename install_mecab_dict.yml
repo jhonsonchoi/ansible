@@ -1,0 +1,19 @@
+---
+
+- hosts: elasticsearch
+  remote_user: root
+  vars:
+    - dic_dir: /usr/lib64/mecab/dic/mecab-ko-dic
+
+  roles:
+    - mecab_dict_installer
+
+#- hosts: data
+#  remote_user: root
+#  vars:
+#    - es_state: restarted
+
+#  roles:
+#    - es_service_manager
+
+

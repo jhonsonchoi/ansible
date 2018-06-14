@@ -1,0 +1,38 @@
+---
+
+# - hosts: prod_masters
+#   remote_user: root
+#   roles:
+#     - redocker
+
+- hosts: master
+  remote_user: root
+  vars:
+    - es_master: 1
+    - es_minimum_master_nodes: 2 # 마스터노드가 복수일 경우
+    - es_user: elasticsearch
+    - es_group: elasticsearch
+    - es_heap_size: 4g
+    - es_max_open_files: 65536
+#    - es_max_map_count: 262144
+  roles:
+    - es_installer
+
+- hosts: data
+  remote_user: root
+  vars:
+    - es_data: 1
+    - es_minimum_master_nodes: 2 # 마스터노드가 복수일 경우
+    - es_user: elasticsearch
+    - es_group: elasticsearch
+    - es_heap_size: 32g
+    - es_max_open_files: 65536
+#    - es_max_map_count: 262144
+    - es_data_dirs:
+      - /data001
+      - /data002
+      - /data003
+      - /data004
+
+  roles:
+    - es_installer

@@ -1,0 +1,3 @@
+- name: manage kibana service
+  # become: yes
+  service: name=kibana state={{kibana_state}} enabled=yes

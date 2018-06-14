@@ -1,0 +1,10 @@
+---
+
+
+- hosts: logstash
+  remote_user: elastic
+  vars:
+    - mod_no: 0
+
+  roles:
+    - ls_pipelines_installer

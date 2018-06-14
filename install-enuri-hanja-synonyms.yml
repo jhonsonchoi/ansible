@@ -1,0 +1,20 @@
+---
+
+- hosts: data
+  remote_user: root
+  roles:
+    - synonyms-hanja-installer
+
+- hosts: master
+  remote_user: root
+  roles:
+    - synonyms-hanja-installer
+
+#- hosts: prod_data
+#  remote_user: root
+#  vars:
+#    - es_state: restarted
+
+#  roles:
+#    - es_service_manager
+
