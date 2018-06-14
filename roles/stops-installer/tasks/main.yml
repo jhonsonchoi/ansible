@@ -1,7 +1,0 @@
-- name: install stops
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/elasticsearch/{{ item }}"
-    #mode: 0755
-  with_items:
-    - enuri_stopwords.txt

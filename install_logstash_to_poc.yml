@@ -1,8 +1,0 @@
----
-
-
-- hosts: espoc
-  remote_user: root
-
-  roles:
-    - ls_installer
